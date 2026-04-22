@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Something for You 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose: #c0394b;
+      --cream: #fff8f2;
+      --dark: #2a1a1f;
+      --gold: #c9943a;
+      --green: #22a85a;
+      --red: #e03535;
+    }
+
+    body {
+      background: var(--cream);
+      font-family: 'Lora', serif;
+      color: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Petals ── */
+    .petals-container { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .petal { position:absolute; top:-40px; font-size:1.4rem; animation:fall linear infinite; opacity:.5; }
+    @keyframes fall {
+      0%   { transform:translateY(0) rotate(0deg); opacity:.5; }
+      100% { transform:translateY(110vh) rotate(360deg); opacity:0; }
+    }
+
+    canvas#confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+
+    /* ── Card ── */
+    .envelope-wrap {
+      position:relative; z-index:1;
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh; padding:2.5rem 1rem;
+    }
+    .letter-card {
+      background:#fff;
+      border:1px solid #e8cdd2;
+      border-radius:4px;
+      max-width:680px; width:100%;
+      padding:3rem 3.5rem;
+      box-shadow: 0 2px 6px rgba(192,57,75,.08),
+                  0 12px 48px rgba(192,57,75,.12),
+                  inset 0 0 0 6px rgba(247,214,218,.35);
+      position:relative;
+      animation:cardIn .9s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform:translateY(40px) scale(.97); }
+      to   { opacity:1; transform:none; }
+    }
+
+    .wax-seal {
+      position:absolute; top:-28px; left:50%; transform:translateX(-50%);
+      width:56px; height:56px; background:var(--rose); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.6rem; box-shadow:0 4px 12px rgba(192,57,75,.4); border:3px solid #fff;
+    }
+    .letter-date { text-align:right; font-size:.8rem; color:#b08090; font-style:italic; margin-bottom:1.6rem; }
+    .greeting { font-family:'Playfair Display',serif; font-size:1.9rem; color:var(--rose); margin-bottom:1.2rem; }
+    .letter-body p { font-size:1.05rem; line-height:1.85; margin-bottom:1rem; color:#3a2028; }
+    .letter-body p em { color:var(--rose); font-style:italic; }
+    .signature { margin-top:1.8rem; font-family:'Playfair Display',serif; font-style:italic; font-size:1.2rem; color:var(--gold); text-align:right; }
+    .divider { text-align:center; margin:1.6rem 0; color:#ddbbc0; letter-spacing:.3em; font-size:.75rem; }
+
+    /* ── Question blocks ── */
+    .q-section { padding-top:1.8rem; border-top:1px dashed #e8cdd2; text-align:center; }
+    .q-text { font-family:'Playfair Display',serif; color:var(--dark); margin-bottom:1.2rem; line-height:1.3; }
+    .q-text.big    { font-size:1.75rem; color:var(--rose); }
+    .q-text.normal { font-size:1.25rem; }
+
+    .sub-msg {
+      font-size:.88rem; color:#a07080; font-style:italic;
+      min-height:1.3em; margin-bottom:1.4rem;
+    }
+    .sub-msg.shake { animation:wiggle .45s ease; color:var(--rose); }
+    @keyframes wiggle {
+      0%,100% { transform:translateX(0); }
+      20%     { transform:translateX(-7px); }
+      40%     { transform:translateX(7px); }
+      60%     { transform:translateX(-4px); }
+      80%     { transform:translateX(4px); }
+    }
+
+    /* buttons wrapper needs relative so absolute No can roam */
+    .btn-wrap { position:relative; min-height:52px; display:flex; gap:1rem; justify-content:center; align-items:center; }
+    .btn-yes, .btn-no {
+      padding:.72rem 2.2rem; border:none; border-radius:3px;
+      font-family:'Lora',serif; font-size:1rem; cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .btn-yes { background:var(--green); color:#fff; box-shadow:0 4px 14px rgba(34,168,90,.35); }
+    .btn-yes:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(34,168,90,.45); }
+    .btn-no  { background:var(--red); color:#fff; }
+    /* when roaming, it goes absolute */
+    .btn-no.roaming { position:absolute; transition:top .28s cubic-bezier(.22,1,.36,1), left .28s cubic-bezier(.22,1,.36,1); }
+
+    /* ── Stage show/hide ── */
+    .stage { display:none; }
+    .stage.active { display:block; animation:fadeIn .6s ease both; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;} }
+
+    /* ── Stage 2 travel ── */
+    .travel-emoji { font-size:3rem; margin-bottom:.8rem; }
+
+    /* ── Stage 3 Zenitsu ── */
+    #stage3 { text-align:center; }
+    .final-title { font-family:'Playfair Display',serif; font-size:1.9rem; color:var(--rose); margin-bottom:.3rem; }
+    .final-sub { color:#a07080; font-style:italic; margin-bottom:1.6rem; font-size:.92rem; }
+    .final-heart { font-size:4rem; display:block; margin:0 auto .8rem; animation:heartbeat 1.1s ease infinite; }
+    @keyframes heartbeat {
+      0%,100%{transform:scale(1);}14%{transform:scale(1.22);}28%{transform:scale(1);}42%{transform:scale(1.12);}
+    }
+
+    /* Zenitsu scene */
+    .zenitsu-scene {
+      position:relative; width:300px; height:300px; margin:0 auto;
+    }
+    .z-lightning {
+      position:absolute; inset:0; border-radius:50%;
+      background:radial-gradient(circle, rgba(255,230,0,.22) 0%, transparent 68%);
+      animation:zflash 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes zflash { 0%{opacity:.4;transform:scale(.95);}100%{opacity:1;transform:scale(1.08);} }
+
+    .z-svg { width:100%; height:100%; }
+
+    /* heart flying from Zenitsu's hand toward viewer */
+    .heart-shot {
+      position:absolute;
+      font-size:2.4rem;
+      bottom:105px; left:55px;
+      opacity:0;
+      animation:shootHeart 1.6s cubic-bezier(.22,1,.36,1) .7s forwards;
+      pointer-events:none;
+    }
+    @keyframes shootHeart {
+      0%  { opacity:0; transform:translate(0,0) scale(.4) rotate(-15deg); }
+      15% { opacity:1; }
+      100%{ opacity:1; transform:translate(170px,-145px) scale(1.5) rotate(12deg); }
+    }
+
+    /* speech bubble */
+    .speech-bubble {
+      position:absolute; top:10px; right:-10px;
+      background:#fff; border:2px solid #f5c518;
+      border-radius:14px; padding:6px 12px;
+      font-size:.8rem; font-family:'Lora',serif; color:#2a1a1f;
+      white-space:nowrap;
+      animation:bubblePop .5s cubic-bezier(.22,1,.36,1) 1s both;
+    }
+    .speech-bubble::after {
+      content:''; position:absolute; bottom:-10px; left:16px;
+      border:5px solid transparent; border-top-color:#f5c518;
+    }
+    @keyframes bubblePop { from{opacity:0;transform:scale(.6);}to{opacity:1;transform:none;} }
+
+    @media(max-width:520px){
+      .letter-card{ padding:2.2rem 1.4rem; }
+      .greeting{ font-size:1.5rem; }
+      .q-text.big{ font-size:1.35rem; }
+      .zenitsu-scene{ width:250px; height:250px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="petals-container" id="petals"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="envelope-wrap">
+  <div class="letter-card" id="card">
+    <div class="wax-seal">💌</div>
+    <div class="letter-date">for you 🤍</div>
+
+    <div class="greeting">hey, so…</div>
+    <div class="letter-body">
+      <p>You're the reason he hasn't loved anyone for a decade.</p>
+      <p>Nobody else made sense after you. <em>Blame yourself.</em> 🫶</p>
+    </div>
+    <div class="signature">— you know who 🤍</div>
+
+    <div class="divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <!-- ═══ STAGE 1 ═══ -->
+    <div class="q-section stage active" id="stage1">
+      <p class="q-text normal">so… do you love him or nah? 🫠</p>
+      <p class="sub-msg" id="sub1">&nbsp;</p>
+      <div class="btn-wrap" id="wrap1">
+        <button class="btn-yes" onclick="yesStage1()">Yes 💕</button>
+        <button class="btn-no" id="no1"
+          onmouseenter="runAway('no1','sub1','wrap1',msgs1)"
+          onclick="runAway('no1','sub1','wrap1',msgs1)">No</button>
+      </div>
+    </div>
+
+    <!-- ═══ STAGE 2 ═══ -->
+    <div class="q-section stage" id="stage2">
+      <div class="travel-emoji">🏔️✈️🌊</div>
+      <p class="q-text big">Do you want to travel<br>An Giang next holidays? 🗺️</p>
+      <p class="sub-msg" id="sub2">&nbsp;</p>
+      <div class="btn-wrap" id="wrap2">
+        <button class="btn-yes" onclick="yesStage2()">Yes!! 🥹</button>
+        <button class="btn-no" id="no2"
+          onmouseenter="runAway('no2','sub2','wrap2',msgs2)"
+          onclick="runAway('no2','sub2','wrap2',msgs2)">No</button>
+      </div>
+    </div>
+
+    <!-- ═══ STAGE 3 — Zenitsu ═══ -->
+    <div class="q-section stage" id="stage3">
+      <span class="final-heart">❤️</span>
+      <p class="final-title">it's a date then!! 🎉</p>
+      <p class="final-sub">Zenitsu just heard the news…</p>
+
+      <div class="zenitsu-scene">
+        <div class="z-lightning"></div>
+
+        <!-- Speech bubble -->
+        <div class="speech-bubble">I'll protect you!! ⚡</div>
+
+        <!-- Zenitsu SVG -->
+        <svg class="z-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- soft glow -->
+          <circle cx="150" cy="195" r="105" fill="#fffbe6" opacity=".55"/>
+
+          <!-- ── Body / Haori ── -->
+          <ellipse cx="150" cy="222" rx="52" ry="65" fill="#f5c518"/>
+          <!-- triangle pattern -->
+          <polygon points="105,192 125,192 115,222" fill="#cc6600" opacity=".75"/>
+          <polygon points="125,192 145,192 135,222" fill="#cc6600" opacity=".75"/>
+          <polygon points="145,192 165,192 155,222" fill="#cc6600" opacity=".75"/>
+          <polygon points="165,192 185,192 175,222" fill="#cc6600" opacity=".75"/>
+          <polygon points="108,222 128,222 118,252" fill="#cc6600" opacity=".75"/>
+          <polygon points="128,222 148,222 138,252" fill="#cc6600" opacity=".75"/>
+          <polygon points="148,222 168,222 158,252" fill="#cc6600" opacity=".75"/>
+          <!-- white inner collar -->
+          <path d="M133 192 Q150 207 167 192 L163 218 Q150 225 137 218 Z" fill="#fff"/>
+
+          <!-- ── Neck ── -->
+          <rect x="143" y="166" width="14" height="22" rx="6" fill="#f9d5b0"/>
+
+          <!-- ── Head ── -->
+          <ellipse cx="150" cy="148" rx="37" ry="39" fill="#f9d5b0"/>
+
+          <!-- ── Hair (blonde) ── -->
+          <ellipse cx="150" cy="122" rx="37" ry="20" fill="#f5c518"/>
+          <path d="M113 134 Q109 105 133 99 Q150 94 167 99 Q191 105 187 134" fill="#f5c518"/>
+          <!-- side hair strands -->
+          <path d="M113 138 Q99 152 104 168" stroke="#e0b000" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M187 138 Q201 152 196 168" stroke="#e0b000" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <!-- forehead bang -->
+          <ellipse cx="150" cy="118" rx="20" ry="10" fill="#e6b800"/>
+
+          <!-- ── Eyes (big & sparkly) ── -->
+          <!-- left -->
+          <ellipse cx="134" cy="151" rx="10" ry="12" fill="#fff"/>
+          <ellipse cx="134" cy="152" rx="7"  ry="9"  fill="#4a7ed0"/>
+          <ellipse cx="134" cy="153" rx="5"  ry="6"  fill="#1a3060"/>
+          <circle  cx="137" cy="148" r="2.5" fill="#fff"/>
+          <!-- right -->
+          <ellipse cx="166" cy="151" rx="10" ry="12" fill="#fff"/>
+          <ellipse cx="166" cy="152" rx="7"  ry="9"  fill="#4a7ed0"/>
+          <ellipse cx="166" cy="153" rx="5"  ry="6"  fill="#1a3060"/>
+          <circle  cx="169" cy="148" r="2.5" fill="#fff"/>
+
+          <!-- ── Tears (he's crying happy tears) ── -->
+          <ellipse cx="126" cy="163" rx="3" ry="6" fill="#a8d8f0" opacity=".75"/>
+          <ellipse cx="174" cy="163" rx="3" ry="6" fill="#a8d8f0" opacity=".75"/>
+
+          <!-- ── Blush ── -->
+          <ellipse cx="122" cy="160" rx="11" ry="6" fill="#ff9999" opacity=".4"/>
+          <ellipse cx="178" cy="160" rx="11" ry="6" fill="#ff9999" opacity=".4"/>
+
+          <!-- ── Nose & mouth ── -->
+          <ellipse cx="150" cy="163" rx="3" ry="2" fill="#e0a888"/>
+          <path d="M140 172 Q150 182 160 172" stroke="#c0394b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+          <!-- ── Arm extended sending heart ── -->
+          <!-- upper arm -->
+          <path d="M196 210 Q222 198 242 188" stroke="#f9d5b0" stroke-width="15" fill="none" stroke-linecap="round"/>
+          <!-- sleeve over arm -->
+          <path d="M196 210 Q220 200 238 190" stroke="#f5c518" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <!-- hand (small fist) -->
+          <circle cx="244" cy="186" r="10" fill="#f9d5b0"/>
+
+          <!-- ── Lightning bolt ── -->
+          <polygon points="158,60 146,95 157,95 142,132 172,88 159,88" fill="#ffe000" opacity=".8"/>
+          <polygon points="162,64 150,99 161,99 146,136 176,92 163,92" fill="#fff176" opacity=".4"/>
+        </svg>
+
+        <!-- Heart flying out from hand -->
+        <div class="heart-shot">💗</div>
+      </div>
+
+      <p style="margin-top:1.4rem;font-style:italic;color:#a07080;font-size:.9rem;">
+        An Giang, here we come 🌄✈️
+      </p>
+    </div>
+    <!-- /stage3 -->
+
+  </div><!-- /letter-card -->
+</div>
+
+<script>
+  /* ── Petals ── */
+  (() => {
+    const cont = document.getElementById('petals');
+    const pool = ['🌸','🌺','❤️','🌷','✨','⚡'];
+    for (let i = 0; i < 24; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = pool[Math.floor(Math.random()*pool.length)];
+      p.style.cssText = `left:${Math.random()*100}%;animation-duration:${4+Math.random()*7}s;animation-delay:${-Math.random()*10}s;font-size:${.8+Math.random()*.9}rem;`;
+      cont.appendChild(p);
+    }
+  })();
+
+  /* ── Button messages ── */
+  const msgs1 = [
+    "babe no 💀 try again",
+    "that's not it bestie 😭",
+    "the audacity… try the other one",
+    "ur lying to urself rn 🫠",
+    "the 'no' button is literally broken lmao",
+    "ok I'll wait… 🙄",
+    "she's fighting it so hard 💀",
+    "just say yes omg 😭🙏",
+  ];
+  const msgs2 = [
+    "nah sis that's the wrong answer 😭",
+    "An Giang is literally calling ur name 🏔️",
+    "the mountains are crying rn 💀",
+    "broo it'll be SO fun tho 🥹",
+    "ok but WHY not 😤",
+    "ur gonna regret this 🌄",
+    "last chance before Zenitsu cries 😭⚡",
+    "I'll bring bánh mì ok NOW say yes 🥖",
+  ];
+
+  const attempts = {};
+
+  function runAway(btnId, subId, wrapId, msgs) {
+    if (!attempts[btnId]) attempts[btnId] = 0;
+    attempts[btnId]++;
+
+    const btn  = document.getElementById(btnId);
+    const sub  = document.getElementById(subId);
+    const wrap = document.getElementById(wrapId);
+    const shouldMove = Math.random() > 0.35; // 65% run, 35% shake
+
+    if (shouldMove) {
+      btn.classList.add('roaming');
+      const wR = wrap.getBoundingClientRect();
+      const bR = btn.getBoundingClientRect();
+      const maxX = wR.width  - bR.width  - 10;
+      const maxY = wR.height - bR.height - 10;
+      // expand wrap height so btn has room
+      wrap.style.minHeight = '120px';
+      btn.style.left = (5 + Math.random() * Math.max(maxX, 60)) + 'px';
+      btn.style.top  = (5 + Math.random() * Math.max(maxY, 60)) + 'px';
+    } else {
+      btn.style.animation = 'none';
+      void btn.offsetWidth;
+      btn.style.animation = 'wiggle .42s ease';
+    }
+
+    const idx = Math.min(attempts[btnId] - 1, msgs.length - 1);
+    sub.textContent = msgs[idx];
+    sub.classList.remove('shake');
+    void sub.offsetWidth;
+    sub.classList.add('shake');
+  }
+
+  function resetBtn(btnId, wrapId) {
+    const btn  = document.getElementById(btnId);
+    const wrap = document.getElementById(wrapId);
+    btn.classList.remove('roaming');
+    btn.style.left = btn.style.top = btn.style.animation = '';
+    wrap.style.minHeight = '';
+  }
+
+  function switchStage(fromId, toId) {
+    document.getElementById(fromId).classList.remove('active');
+    document.getElementById(toId).classList.add('active');
+  }
+
+  /* ── Stage 1 YES ── */
+  function yesStage1() {
+    launchConfetti(3500);
+    setTimeout(() => {
+      resetBtn('no2','wrap2');
+      switchStage('stage1','stage2');
+    }, 500);
+  }
+
+  /* ── Stage 2 YES ── */
+  function yesStage2() {
+    launchConfetti(7000);
+    setTimeout(() => switchStage('stage2','stage3'), 450);
+  }
+
+  /* ── Confetti ── */
+  function launchConfetti(duration) {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    const colors = ['#c0394b','#f7d6da','#c9943a','#f28fb0','#fff','#ffd1dc','#ffe000','#22a85a'];
+    const pts = Array.from({length:190}, () => ({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height - canvas.height,
+      r: 4+Math.random()*7,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      speed: 1.8+Math.random()*4.5,
+      angle: 0,
+    }));
+    let fr;
+    (function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pts.forEach(p=>{
+        ctx.beginPath();
+        ctx.ellipse(p.x,p.y,p.r,p.r*.4,p.angle,0,Math.PI*2);
+        ctx.fillStyle=p.color; ctx.fill();
+        p.y+=p.speed; p.x+=Math.sin(p.angle)*1.8; p.angle+=.06;
+        if(p.y>canvas.height+10){ p.y=-10; p.x=Math.random()*canvas.width; }
+      });
+      fr=requestAnimationFrame(draw);
+    })();
+    setTimeout(()=>{ cancelAnimationFrame(fr); ctx.clearRect(0,0,canvas.width,canvas.height); }, duration);
+  }
+</script>
+</body>
+</html>
