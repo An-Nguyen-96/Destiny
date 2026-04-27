@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f5f0e8;color:#1a1410;font-size:14px;line-height:1.6}
+.wrap{display:flex;min-height:100vh}
+.sidebar{width:280px;flex-shrink:0;background:#faf7f2;border-right:1px solid #d8cfc4;padding:1.25rem 1.1rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;letter-spacing:.05em;margin-bottom:.15rem}
+.logo-sub{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#7a7068;margin-bottom:1rem}
+.flabel{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7a7068;margin-bottom:.3rem;margin-top:.65rem;display:block;font-weight:500}
+.finput{width:100%;padding:.45rem .6rem;border:1px solid #d8cfc4;border-radius:4px;background:#fff;color:#1a1410;font-family:'DM Sans',sans-serif;font-size:13px;outline:none}
+.finput:focus{border-color:#c9a84c}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.fsep{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#b8b0a8;margin:1rem 0 .5rem;display:flex;align-items:center;gap:.4rem}
+.fsep::after{content:'';flex:1;height:1px;background:#d8cfc4}
+.btn-main{width:100%;padding:.65rem;background:#1a1410;color:#f5f0e8;border:none;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;margin-top:.875rem}
+.btn-main:hover{background:#3d3530}
+.btn-demo{width:100%;padding:.5rem;background:transparent;color:#7a7068;border:1px solid #d8cfc4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;margin-top:.35rem}
+.btn-demo:hover{border-color:#c9a84c;color:#c9a84c}
+.main{flex:1;padding:1.75rem 1.75rem;max-width:700px}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65vh;text-align:center;opacity:.4}
+.ph-sym{font-family:'Cormorant Garamond',serif;font-size:3rem;color:#c9a84c;margin-bottom:.875rem;line-height:1.2}
+.ph h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:.35rem}
+.ph p{font-size:12px;color:#7a7068}
+.rh{border-bottom:1px solid #d8cfc4;padding-bottom:1.1rem;margin-bottom:1.25rem}
+.prow{display:flex;align-items:center;gap:.875rem;margin-bottom:.65rem}
+.av{width:48px;height:48px;border-radius:50%;background:#1a1410;color:#f5f0e8;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;flex-shrink:0}
+.rname{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;line-height:1.2}
+.rsub{font-size:11px;color:#7a7068;margin-top:.15rem}
+.tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tag{padding:.15rem .55rem;border-radius:20px;font-size:10px;font-weight:500}
+.tg{background:#fef3da;color:#8a6820;border:1px solid #f0d78a}
+.ti{background:#f0ede8;color:#3d3530;border:1px solid #d8cfc4}
+.ts{background:#eaf0e8;color:#2d5028;border:1px solid #b8d4b4}
+.tb{background:#e8eaf4;color:#1d2461;border:1px solid #b4bcdc}
+.tabs{display:flex;border-bottom:1px solid #d8cfc4;margin-bottom:1.25rem}
+.tab{padding:.5rem 1rem;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#7a7068;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab.active{color:#1a1410;border-bottom-color:#1a1410;font-weight:500}
+.pane{display:none}.pane.active{display:block}
+.sh{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:#1a1410;margin:1.1rem 0 .65rem}
+.sh:first-child{margin-top:0}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem;margin-bottom:.875rem}
+.mc{background:#fff;border:1px solid #d8cfc4;border-radius:6px;padding:.75rem .875rem;text-align:center}
+.mc .ml{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#7a7068;margin-bottom:.25rem}
+.mc .mv{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:#1a1410;line-height:1.1}
+.mc .ms{font-size:10px;color:#b8b0a8;margin-top:.15rem}
+.box{background:#fff;border:1px solid #d8cfc4;border-radius:6px;padding:.875rem 1rem;margin-bottom:.5rem}
+.box-t{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#1a1410;margin-bottom:.3rem}
+.box p,.box li{font-size:13px;color:#3d3530;line-height:1.7}
+.div{border:none;border-top:1px solid #d8cfc4;margin:1.1rem 0}
+.stars{display:flex;gap:2px;margin:.15rem 0 .5rem}
+.star{width:10px;height:10px;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);display:inline-block}
+.son{background:#c9a84c}.soff{background:#d8cfc4}
+.sugg{background:#faf7f2;border-left:2px solid #c9a84c;border-radius:0 6px 6px 0;padding:.875rem 1rem;margin-bottom:.5rem}
+.sugg-t{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:#8b4513;margin-bottom:.3rem}
+.sugg p{font-size:13px;color:#3d3530;line-height:1.7}
+.warn{background:#fdf6e8;border:1px solid #f0d78a;border-radius:6px;padding:.75rem 1rem;margin-top:1.25rem}
+.warn p{font-size:11px;color:#7a5c1a;line-height:1.6}
+.phase{display:flex;gap:.75rem;margin-bottom:.75rem}
+.pdw{display:flex;flex-direction:column;align-items:center}
+.pd{width:10px;height:10px;border-radius:50%;border:2px solid #d8cfc4;background:#fff;flex-shrink:0;margin-top:3px}
+.pd.on{background:#c9a84c;border-color:#c9a84c}
+.pl{width:1px;flex:1;background:#d8cfc4;min-height:14px;margin-top:2px}
+.pb{flex:1;padding-bottom:.75rem}
+.pr{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#7a7068;margin-bottom:.1rem}
+.plb{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#1a1410;margin-bottom:.15rem}
+.pdc{font-size:12px;color:#3d3530;line-height:1.6}
+.compat-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+.compat-tag{padding:.2rem .65rem;background:#faf7f2;border:1px solid #d8cfc4;border-radius:20px;font-size:11px;color:#3d3530}
+/* Astro iframe section */
+.astro-section{background:#fff;border:1px solid #d8cfc4;border-radius:6px;overflow:hidden;margin-bottom:.5rem}
+.astro-header{padding:.75rem 1rem;background:#f5f0e8;border-bottom:1px solid #d8cfc4;display:flex;align-items:center;justify-content:space-between}
+.astro-header-t{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#1a1410}
+.astro-badge{font-size:10px;background:#eaf0e8;color:#2d5028;border:1px solid #b8d4b4;padding:.1rem .5rem;border-radius:20px}
+.astro-body{padding:.875rem 1rem}
+.astro-body p{font-size:13px;color:#3d3530;line-height:1.7;margin-bottom:.5rem}
+.astro-link{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem .875rem;background:#1a1410;color:#f5f0e8;border-radius:4px;font-size:12px;text-decoration:none;letter-spacing:.05em}
+.astro-link:hover{background:#3d3530}
+.note-box{background:#f0ede8;border-radius:6px;padding:.75rem 1rem;margin-bottom:.5rem}
+.note-box p{font-size:12px;color:#7a7068;line-height:1.6;font-style:italic}
+/* AI loading */
+.ai-loading{display:flex;align-items:center;gap:.5rem;font-size:12px;color:#7a7068;padding:.5rem 0}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:#c9a84c;animation:pulse 1.2s infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<aside class="sidebar">
+  <div class="logo">Lá Số Vận Mệnh</div>
+  <div class="logo-sub">Tử Vi · Thần Số Học · Chiêm Tinh</div>
+  <span class="flabel">Họ và tên *</span>
+  <input class="finput" id="fn" type="text" placeholder="Nguyễn Văn A">
+  <span class="flabel">Ngày sinh *</span>
+  <input class="finput" id="fd" type="date">
+  <div class="frow">
+    <div><span class="flabel">Giờ sinh</span><input class="finput" id="ft" type="time"></div>
+    <div><span class="flabel">Giới tính</span>
+      <select class="finput" id="fg"><option value="">--</option><option value="nam">Nam</option><option value="nu">Nữ</option></select>
+    </div>
+  </div>
+  <span class="flabel">Nơi sinh</span>
+  <input class="finput" id="fc" type="text" placeholder="Tp. HCM">
+  <div class="fsep">Bổ sung</div>
+  <span class="flabel">Nghề nghiệp</span>
+  <input class="finput" id="fj" type="text" placeholder="Sinh viên, kế toán...">
+  <span class="flabel">Nơi đang sống</span>
+  <input class="finput" id="fl" type="text" placeholder="Hà Nội, HCM...">
+  <span class="flabel">Mục tiêu muốn biết</span>
+  <input class="finput" id="fgo" type="text" placeholder="Tình duyên, sự nghiệp...">
+  <span class="flabel">Hôn nhân</span>
+  <select class="finput" id="fm">
+    <option value="">--</option>
+    <option value="doc-than">Độc thân</option>
+    <option value="co-doi">Có đôi</option>
+    <option value="ket-hon">Đã kết hôn</option>
+    <option value="ly-hon">Đã ly hôn</option>
+  </select>
+  <button class="btn-main" onclick="gen()">Xem lá số của tôi</button>
+  <button class="btn-demo" onclick="loadDemo()">Demo — Tạ Tùng Linh (01/12/2005)</button>
+</aside>
+
+<main class="main">
+  <div class="ph" id="ph">
+    <div class="ph-sym">☽ ✦ ☉<br>♈ ♌ ♐</div>
+    <h2>Nhập thông tin để xem lá số</h2>
+    <p>Điền họ tên và ngày sinh vào biểu mẫu bên trái</p>
+  </div>
+  <div id="result" style="display:none">
+    <div class="rh">
+      <div class="prow">
+        <div class="av" id="av"></div>
+        <div><div class="rname" id="rn"></div><div class="rsub" id="rs"></div></div>
+      </div>
+      <div class="tags" id="rtags"></div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="st('tv')">Tử vi</div>
+      <div class="tab" onclick="st('ts')">Thần số học</div>
+      <div class="tab" onclick="st('ct')">Chiêm tinh</div>
+      <div class="tab" onclick="st('gy')">Gợi ý cá nhân</div>
+    </div>
+    <div class="pane active" id="p-tv"></div>
+    <div class="pane" id="p-ts"></div>
+    <div class="pane" id="p-ct"></div>
+    <div class="pane" id="p-gy"></div>
+  </div>
+</main>
+</div>
+
+<script>
+var CAN=['Giáp','Ất','Bính','Đinh','Mậu','Kỷ','Canh','Tân','Nhâm','Quý'];
+var CHI=['Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi','Thân','Dậu','Tuất','Hợi'];
+var ANIMALS=['Chuột','Trâu','Hổ','Mèo','Rồng','Rắn','Ngựa','Dê','Khỉ','Gà','Chó','Heo'];
+var NA={
+  'Giáp Tý':['Kim','Hải Trung Kim'],'Ất Sửu':['Kim','Hải Trung Kim'],
+  'Bính Dần':['Hỏa','Lô Trung Hỏa'],'Đinh Mão':['Hỏa','Lô Trung Hỏa'],
+  'Mậu Thìn':['Mộc','Đại Lâm Mộc'],'Kỷ Tỵ':['Mộc','Đại Lâm Mộc'],
+  'Canh Ngọ':['Thổ','Lộ Bàng Thổ'],'Tân Mùi':['Thổ','Lộ Bàng Thổ'],
+  'Nhâm Thân':['Kim','Kiếm Phong Kim'],'Quý Dậu':['Kim','Kiếm Phong Kim'],
+  'Giáp Tuất':['Hỏa','Sơn Đầu Hỏa'],'Ất Hợi':['Hỏa','Sơn Đầu Hỏa'],
+  'Bính Tý':['Thủy','Giản Hạ Thủy'],'Đinh Sửu':['Thủy','Giản Hạ Thủy'],
+  'Mậu Dần':['Thổ','Thành Đầu Thổ'],'Kỷ Mão':['Thổ','Thành Đầu Thổ'],
+  'Canh Thìn':['Kim','Bạch Lạp Kim'],'Tân Tỵ':['Kim','Bạch Lạp Kim'],
+  'Nhâm Ngọ':['Mộc','Dương Liễu Mộc'],'Quý Mùi':['Mộc','Dương Liễu Mộc'],
+  'Giáp Thân':['Thủy','Tuyền Trung Thủy'],'Ất Dậu':['Thủy','Tuyền Trung Thủy'],
+  'Bính Tuất':['Thổ','Ốc Thượng Thổ'],'Đinh Hợi':['Thổ','Ốc Thượng Thổ'],
+  'Mậu Tý':['Hỏa','Tích Lịch Hỏa'],'Kỷ Sửu':['Hỏa','Tích Lịch Hỏa'],
+  'Canh Dần':['Mộc','Tùng Bách Mộc'],'Tân Mão':['Mộc','Tùng Bách Mộc'],
+  'Nhâm Thìn':['Thủy','Trường Lưu Thủy'],'Quý Tỵ':['Thủy','Trường Lưu Thủy'],
+  'Giáp Ngọ':['Kim','Sa Trung Kim'],'Ất Mùi':['Kim','Sa Trung Kim'],
+  'Bính Thân':['Hỏa','Sơn Hạ Hỏa'],'Đinh Dậu':['Hỏa','Sơn Hạ Hỏa'],
+  'Mậu Tuất':['Mộc','Bình Địa Mộc'],'Kỷ Hợi':['Mộc','Bình Địa Mộc'],
+  'Canh Tý':['Thổ','Bích Thượng Thổ'],'Tân Sửu':['Thổ','Bích Thượng Thổ'],
+  'Nhâm Dần':['Kim','Kim Bạc Kim'],'Quý Mão':['Kim','Kim Bạc Kim'],
+  'Giáp Thìn':['Hỏa','Phú Đăng Hỏa'],'Ất Tỵ':['Hỏa','Phú Đăng Hỏa'],
+  'Bính Ngọ':['Thủy','Thiên Hà Thủy'],'Đinh Mùi':['Thủy','Thiên Hà Thủy'],
+  'Mậu Thân':['Thổ','Đại Trạch Thổ'],'Kỷ Dậu':['Thổ','Đại Trạch Thổ'],
+  'Canh Tuất':['Kim','Thoa Xuyến Kim'],'Tân Hợi':['Kim','Thoa Xuyến Kim'],
+  'Nhâm Tý':['Mộc','Tang Đố Mộc'],'Quý Sửu':['Mộc','Tang Đố Mộc'],
+  'Giáp Dần':['Thủy','Đại Khê Thủy'],'Ất Mão':['Thủy','Đại Khê Thủy'],
+  'Bính Thìn':['Thổ','Sa Trung Thổ'],'Đinh Tỵ':['Thổ','Sa Trung Thổ'],
+  'Mậu Ngọ':['Hỏa','Thiên Thượng Hỏa'],'Kỷ Mùi':['Hỏa','Thiên Thượng Hỏa'],
+  'Canh Thân':['Mộc','Thạch Lựu Mộc'],'Tân Dậu':['Mộc','Thạch Lựu Mộc'],
+  'Nhâm Tuất':['Thủy','Đại Hải Thủy'],'Quý Hợi':['Thủy','Đại Hải Thủy']
+};
+
+// Cung Mặt Trời — logic chuẩn theo ngày/tháng dương lịch
+function getZod(m,d){
+  if(m===1)return d<=19?'Ma Kết':'Bảo Bình';
+  if(m===2)return d<=18?'Bảo Bình':'Song Ngư';
+  if(m===3)return d<=20?'Song Ngư':'Bạch Dương';
+  if(m===4)return d<=19?'Bạch Dương':'Kim Ngưu';
+  if(m===5)return d<=20?'Kim Ngưu':'Song Tử';
+  if(m===6)return d<=20?'Song Tử':'Cự Giải';
+  if(m===7)return d<=22?'Cự Giải':'Sư Tử';
+  if(m===8)return d<=22?'Sư Tử':'Xử Nữ';
+  if(m===9)return d<=22?'Xử Nữ':'Thiên Bình';
+  if(m===10)return d<=22?'Thiên Bình':'Bọ Cạp';
+  if(m===11)return d<=21?'Bọ Cạp':'Nhân Mã';
+  if(m===12)return d<=21?'Nhân Mã':'Ma Kết';
+}
+
+var EL={
+  Kim:{desc:'Cứng rắn, quyết đoán, lãnh đạo mạnh. Nói ít làm nhiều, ý chí không bị lay chuyển.',tai:'Tài lộc từ kỷ luật và bền bỉ. Phù hợp tài chính, bất động sản, kim loại.',duyen:'Nghiêm túc, cần thời gian mở lòng. Khi yêu thì trung thành và bền vững.',phongtuy:'Không gian ngăn nắp, màu trắng/xám/vàng kim. Hướng Tây và Tây Bắc.'},
+  Thủy:{desc:'Linh hoạt, thích ứng, nhạy cảm. Trực giác nhạy bén, khả năng giao tiếp xuất sắc.',tai:'Tài lộc qua mạng lưới quan hệ rộng. Phù hợp dịch vụ, thương mại, du lịch.',duyen:'Nhạy cảm, lãng mạn. Bị thu hút bởi người có chiều sâu nội tâm.',phongtuy:'Gần sông hồ, có yếu tố nước. Hướng Bắc lý tưởng.'},
+  Mộc:{desc:'Phát triển không ngừng, nhân từ, sáng tạo. Tư duy dài hạn, phục hồi tốt sau thất bại.',tai:'Tài lộc tăng trưởng từ từ. Phù hợp giáo dục, văn hóa, sáng tạo.',duyen:'Chân thành, ổn định. Cần môi trường bình yên để nở rộ.',phongtuy:'Nhiều cây xanh, không gian thoáng. Hướng Đông và Đông Nam.'},
+  Hỏa:{desc:'Nhiệt huyết, năng động, đam mê. Tâm điểm chú ý, sức ảnh hưởng tự nhiên.',tai:'Cơ hội lớn đến nhanh, cần quản lý dòng tiền. Phù hợp truyền thông, công nghệ.',duyen:'Đam mê, cuồng nhiệt. Cần học duy trì ngọn lửa trong quan hệ dài hạn.',phongtuy:'Ánh sáng dồi dào, màu đỏ/cam làm điểm nhấn. Hướng Nam.'},
+  Thổ:{desc:'Ổn định, đáng tin, bền vững. Chỗ dựa tin cậy cho gia đình và đồng nghiệp.',tai:'Tích lũy bền vững qua nhiều năm. Phù hợp bất động sản, xây dựng, quản lý.',duyen:'Trung thành, thực tế. Tìm sự ổn định hơn kịch tính trong tình yêu.',phongtuy:'Đồ đạc chắc chắn, màu đất/nâu ấm. Hướng Trung tâm, Đông Bắc, Tây Nam.'}
+};
+var ZOD={
+  'Bạch Dương':{sym:'♈',el:'Lửa',ruler:'Sao Hỏa',desc:'Nhiệt huyết, dũng cảm, tiên phong. Luôn đi đầu, bốc đồng nhưng đầy sức sống.',love:'Cuồng nhiệt, trực tiếp. Cần bạn đời không bị áp đảo.',career:'Thích thách thức mới, không hợp việc lặp lại.',health:'Đầu, răng, tai.',lucky:'Thứ Ba · Số 9 · Đỏ',compat:['Sư Tử','Nhân Mã','Song Tử']},
+  'Kim Ngưu':{sym:'♉',el:'Đất',ruler:'Sao Kim',desc:'Kiên định, thực tế, yêu cái đẹp và sự ổn định.',love:'Chung thủy tuyệt đối. Cần thời gian tin tưởng.',career:'Tài chính, bất động sản, ẩm thực, thời trang.',health:'Cổ họng, tuyến giáp, cân nặng.',lucky:'Thứ Sáu · Số 6 · Xanh lá',compat:['Ma Kết','Song Ngư','Cự Giải']},
+  'Song Tử':{sym:'♊',el:'Khí',ruler:'Sao Thủy',desc:'Linh hoạt, thông minh, đa diện. Thích nghi mọi môi trường.',love:'Cần kích thích trí tuệ liên tục.',career:'Báo chí, giáo dục, IT, marketing.',health:'Phổi, tay, thần kinh.',lucky:'Thứ Tư · Số 5 · Vàng chanh',compat:['Thiên Bình','Bảo Bình','Bạch Dương']},
+  'Cự Giải':{sym:'♋',el:'Nước',ruler:'Mặt Trăng',desc:'Nhạy cảm, bảo vệ, gắn bó gia đình. Vỏ ngoài cứng, lòng trong mềm.',love:'Yêu sâu, gắn kết lâu dài.',career:'Y tế, giáo dục, bất động sản, tâm lý.',health:'Dạ dày, tiêu hóa, ngực.',lucky:'Thứ Hai · Số 2 · Bạc',compat:['Bọ Cạp','Song Ngư','Kim Ngưu']},
+  'Sư Tử':{sym:'♌',el:'Lửa',ruler:'Mặt Trời',desc:'Hào phóng, tự hào, lôi cuốn. Sinh ra để tỏa sáng.',love:'Yêu nồng nhiệt. Cần được tôn trọng và tôn vinh.',career:'Sân khấu, lãnh đạo, kinh doanh, giải trí.',health:'Tim, xương sườn.',lucky:'Chủ Nhật · Số 1 · Vàng',compat:['Bạch Dương','Nhân Mã','Thiên Bình']},
+  'Xử Nữ':{sym:'♍',el:'Đất',ruler:'Sao Thủy',desc:'Cẩn thận, phân tích, thực dụng. Chú ý từng chi tiết nhỏ.',love:'Kén chọn nhưng khi yêu thì cống hiến hết mình.',career:'Y tế, nghiên cứu, kế toán, phân tích.',health:'Tiêu hóa, ruột. Lo lắng mãn tính.',lucky:'Thứ Tư · Số 6 · Xanh hải quân',compat:['Ma Kết','Kim Ngưu','Bọ Cạp']},
+  'Thiên Bình':{sym:'♎',el:'Khí',ruler:'Sao Kim',desc:'Công bằng, hài hòa, thẩm mỹ cao. Ghét xung đột.',love:'Lãng mạn, nhẹ nhàng. Cần bạn đời tinh tế.',career:'Luật, ngoại giao, nghệ thuật, thời trang.',health:'Thận, hông, da.',lucky:'Thứ Sáu · Số 6 · Hồng',compat:['Song Tử','Bảo Bình','Sư Tử']},
+  'Bọ Cạp':{sym:'♏',el:'Nước',ruler:'Sao Diêm Vương',desc:'Sâu sắc, bí ẩn, quyết tâm. Cảm xúc mãnh liệt và trực giác nhạy.',love:'Yêu cuồng nhiệt. Đòi hỏi trung thành tuyệt đối.',career:'Nghiên cứu, tâm lý, phẫu thuật, tài chính.',health:'Hệ sinh dục, bàng quang.',lucky:'Thứ Ba · Số 8 · Đỏ sẫm',compat:['Cự Giải','Song Ngư','Ma Kết']},
+  'Nhân Mã':{sym:'♐',el:'Lửa',ruler:'Sao Mộc',desc:'Tự do, triết học, lạc quan bất diệt. Luôn tìm kiếm chân lý.',love:'Cần tự do trong tình yêu. Đừng kiểm soát — phản tác dụng.',career:'Giáo dục, triết học, du lịch, xuất bản.',health:'Hông, đùi, gan.',lucky:'Thứ Năm · Số 3 · Tím',compat:['Bạch Dương','Sư Tử','Thiên Bình']},
+  'Ma Kết':{sym:'♑',el:'Đất',ruler:'Sao Thổ',desc:'Tham vọng, kỷ luật, truyền thống. Kiên nhẫn leo từng bước.',love:'Chậm yêu nhưng bền lâu. Tìm bạn đời ổn định.',career:'Kinh doanh, chính trị, tài chính, quản lý.',health:'Xương, khớp, da, răng.',lucky:'Thứ Bảy · Số 8 · Nâu đất',compat:['Kim Ngưu','Xử Nữ','Bọ Cạp']},
+  'Bảo Bình':{sym:'♒',el:'Khí',ruler:'Sao Thiên Vương',desc:'Độc đáo, nhân đạo, vượt thời đại.',love:'Coi trọng tình bạn trước tình yêu. Cần bạn đời là tri kỷ.',career:'Công nghệ, khoa học, cải cách xã hội.',health:'Mắt cá, bắp chân, tuần hoàn.',lucky:'Thứ Bảy · Số 4 · Xanh điện',compat:['Song Tử','Thiên Bình','Nhân Mã']},
+  'Song Ngư':{sym:'♓',el:'Nước',ruler:'Sao Hải Vương',desc:'Mơ mộng, đồng cảm sâu sắc, tâm linh.',love:'Yêu lãng mạn, lý tưởng hóa bạn đời.',career:'Nghệ thuật, âm nhạc, tâm lý, tâm linh.',health:'Bàn chân, hệ miễn dịch.',lucky:'Thứ Năm · Số 7 · Xanh biển',compat:['Cự Giải','Bọ Cạp','Ma Kết']}
+};
+var LPD={
+  1:{t:'Số 1 — Lãnh đạo',core:'Độc lập, tiên phong, ý chí mạnh. Sinh ra để dẫn đường.',str:'Lãnh đạo, sáng tạo, quyết đoán.',chal:'Bướng bỉnh, khó nhận ý kiến trái chiều.',love:'Cần bạn đời tôn trọng sự độc lập.',car:'CEO, doanh nhân, sáng lập viên.',lucky:'1,10,19 · Đỏ & vàng',star:4},
+  2:{t:'Số 2 — Hòa giải',core:'Nhạy cảm, cầu hòa. Sức mạnh ở sự kết nối người với người.',str:'Đồng cảm, kiên nhẫn, hợp tác.',chal:'Dễ tổn thương, thiếu quyết đoán.',love:'Cần được yêu thương và thấu hiểu.',car:'Nhà tâm lý, ngoại giao, nghệ thuật.',lucky:'2,11,20 · Trắng & bạc',star:4},
+  3:{t:'Số 3 — Sáng tạo',core:'Vui vẻ, biểu đạt xuất sắc. Chạm đến trái tim qua ngôn ngữ.',str:'Giao tiếp, sáng tạo, lạc quan.',chal:'Dễ phân tâm, thiếu kiên trì.',love:'Yêu sôi nổi nhưng cần tự do.',car:'Nghệ sĩ, diễn giả, marketing.',lucky:'3,12,21 · Vàng & cam',star:4},
+  4:{t:'Số 4 — Xây dựng',core:'Kỷ luật, thực tế, đáng tin. Nền tảng mà người khác dựa vào.',str:'Hệ thống, cần cù, trung thực.',chal:'Cứng nhắc, kháng cự thay đổi.',love:'Chung thủy, cần học thể hiện cảm xúc.',car:'Kỹ sư, kế toán, quản lý dự án.',lucky:'4,13,22 · Xanh lá & nâu',star:4},
+  5:{t:'Số 5 — Tự do',core:'Phiêu lưu, linh hoạt. Phát triển mạnh trong sự thay đổi.',str:'Thích nghi, đa tài, táo bạo.',chal:'Thiếu ổn định, khó cam kết lâu dài.',love:'Cần bạn đời năng động.',car:'Du lịch, báo chí, khởi nghiệp.',lucky:'5,14,23 · Xanh dương & bạc',star:4},
+  6:{t:'Số 6 — Nuôi dưỡng',core:'Trách nhiệm, ân cần, yêu gia đình.',str:'Tận tâm, hài hòa, thẩm mỹ tinh tế.',chal:'Hay lo lắng, dễ bị lợi dụng.',love:'Trung thành và tận tụy. Đừng quên yêu bản thân.',car:'Giáo viên, bác sĩ, tư vấn.',lucky:'6,15,24 · Hồng & xanh lá',star:5},
+  7:{t:'Số 7 — Tìm kiếm',core:'Phân tích, triết học. Không ngừng đặt câu hỏi về ý nghĩa vạn vật.',str:'Trí tuệ sắc bén, trực giác mạnh.',chal:'Thu mình, khó gần, đa nghi.',love:'Cần thời gian tin tưởng. Kết nối tâm trí quan trọng nhất.',car:'Khoa học, nghiên cứu, IT, tư vấn.',lucky:'7,16,25 · Tím & xám',star:5},
+  8:{t:'Số 8 — Thành đạt',core:'Tham vọng, quyền lực. Con đường gắn với tiền bạc và địa vị.',str:'Lãnh đạo mạnh, tầm nhìn xa.',chal:'Workaholic, ám ảnh kiểm soát.',love:'Cần bạn đời mạnh mẽ và độc lập.',car:'Tài chính, bất động sản, CEO, đầu tư.',lucky:'8,17,26 · Đen & vàng đồng',star:5},
+  9:{t:'Số 9 — Lý tưởng',core:'Nhân đạo, bao dung. Đến để cống hiến điều lớn lao.',str:'Rộng lượng, ảnh hưởng lớn.',chal:'Lý tưởng hóa, thiếu thực tế.',love:'Yêu sâu nhưng cần học nhận lại tình yêu.',car:'Nhân đạo, giáo dục, y tế, nghệ thuật.',lucky:'9,18,27 · Đỏ & vàng',star:4},
+  11:{t:'Số 11 — Giác ngộ (Master)',core:'Số chủ đạo — trực giác cực mạnh, sứ mệnh truyền cảm hứng.',str:'Trực giác xuất chúng, sức ảnh hưởng tinh thần.',chal:'Căng thẳng nội tâm lớn, nhạy cảm thái quá.',love:'Tìm kết nối tâm hồn sâu sắc.',car:'Nghệ sĩ, tâm linh, cố vấn, giáo viên.',lucky:'11,29,2 · Bạc & trắng ngà',star:5},
+  22:{t:'Số 22 — Đế chế (Master)',core:'Số chủ đạo tối cao — tầm nhìn vĩ đại thành hiện thực.',str:'Tổ chức khổng lồ, dung hòa lý tưởng và thực tế.',chal:'Áp lực khổng lồ từ kỳ vọng nội tâm.',love:'Cần bạn đời hiểu và ủng hộ sứ mệnh.',car:'Lãnh đạo tầm quốc gia, founder tập đoàn.',lucky:'22,4,13 · Đất & vàng',star:5},
+  33:{t:'Số 33 — Người Thầy (Master)',core:'Số hiếm nhất — chữa lành và truyền tải tình yêu ở cấp cao nhất.',str:'Yêu thương vô điều kiện, truyền cảm hứng.',chal:'Tự hi sinh quá mức.',love:'Tình yêu vô biên — cần học bảo vệ bản thân.',car:'Chữa lành, giáo dục, tâm linh.',lucky:'33,6,24 · Xanh lá & trắng',star:5}
+};
+
+var D={};
+function dsum(n){while(n>9&&n!==11&&n!==22&&n!==33){var s=0;String(n).split('').forEach(function(c){s+=+c});n=s;}return n}
+function lpn(dob){var p=dob.split('-');return dsum(dsum(+p[2])+dsum(+p[1])+dsum(+p[0]))}
+function destn(name){
+  // Pythagorean — chỉ dùng chữ Latin không dấu
+  var mp={a:1,b:2,c:3,d:4,e:5,f:8,g:3,h:5,i:1,j:1,k:2,l:3,m:4,n:5,o:7,p:8,q:1,r:2,s:3,t:4,u:6,v:6,w:6,x:5,y:1,z:7};
+  // Chuyển tên tiếng Việt sang không dấu trước
+  var noAccent=removeVietnamese(name);
+  var s=0;noAccent.toLowerCase().replace(/\s/g,'').split('').forEach(function(c){if(mp[c])s+=mp[c]});
+  return dsum(s)||1;
+}
+function souln(name){
+  var mp={a:1,e:5,i:9,o:6,u:3},s=0;
+  var noAccent=removeVietnamese(name);
+  noAccent.toLowerCase().split('').forEach(function(c){if(mp[c])s+=mp[c]});
+  return dsum(s)||1;
+}
+function pyrn(dob){var p=dob.split('-');return dsum(dsum(+p[2])+dsum(+p[1])+dsum(new Date().getFullYear()))}
+function getAge(dob){var p=dob.split('-'),b=new Date(+p[0],+p[1]-1,+p[2]),n=new Date();var a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a}
+
+// Chuyển tiếng Việt có dấu → không dấu để tính thần số học
+function removeVietnamese(str){
+  var from='àáảãạâầấẩẫậăằắẳẵặèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđÀÁẢÃẠÂẦẤẨẪẬĂẰẮẲẴẶÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+  var to  ='aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiioooooooooooooooooouuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYD';
+  for(var i=0;i<from.length;i++){str=str.replace(new RegExp(from[i],'g'),to[i]);}
+  return str;
+}
+
+function mkStars(n){var s='<div class="stars">';for(var i=0;i<5;i++)s+='<div class="star '+(i<n?'son':'soff')+'"></div>';return s+'</div>'}
+function tag(t,c){return '<span class="tag '+c+'">'+t+'</span>'}
+function box(title,body){return '<div class="box"><div class="box-t">'+title+'</div><p>'+body+'</p></div>'}
+function sugg(title,body){return '<div class="sugg"><div class="sugg-t">'+title+'</div><p>'+body+'</p></div>'}
+
+function st(id){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',['tv','ts','ct','gy'][i]===id)});
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('p-'+id).classList.add('active');
+}
+
+function loadDemo(){
+  document.getElementById('fn').value='Tạ Tùng Linh';
+  document.getElementById('fd').value='2005-12-01';
+  document.getElementById('ft').value='23:25';
+  document.getElementById('fg').value='nu';
+  document.getElementById('fc').value='HCM';
+  document.getElementById('fj').value='Sinh viên';
+  document.getElementById('fl').value='HCM';
+  document.getElementById('fgo').value='Tình duyên';
+  document.getElementById('fm').value='doc-than';
+  gen();
+}
+
+function gen(){
+  var name=document.getElementById('fn').value.trim();
+  var dob=document.getElementById('fd').value;
+  var timeStr=document.getElementById('ft').value;
+  var gender=document.getElementById('fg').value;
+  var city=document.getElementById('fc').value.trim();
+  var job=document.getElementById('fj').value.trim();
+  var live=document.getElementById('fl').value.trim();
+  var goal=document.getElementById('fgo').value.trim();
+  var marital=document.getElementById('fm').value;
+  if(!name||!dob){alert('Vui lòng nhập họ tên và ngày sinh.');return;}
+
+  var p=dob.split('-'),y=+p[0],m=+p[1],d=+p[2];
+  var cc=CAN[(y-4)%10]+' '+CHI[(y-4)%12];
+  var animal=ANIMALS[(y-4)%12];
+  var naData=NA[cc]||['Thổ','Không rõ'];
+  var napam=naData[0],napamFull=naData[1];
+  var zodName=getZod(m,d);
+  var zod=ZOD[zodName];
+  var lp=lpn(dob),dst=destn(name),soul=souln(name),py=pyrn(dob),age=getAge(dob);
+
+  // Tạo URL Astro.com với data đã biết
+  // Astro.com chart URL format
+  var astroUrl='https://www.astro.com/cgi/chart.cgi?lang=en&nhor=0&bday='+d+'&bmon='+m+'&byear='+y+(timeStr?'&bhour='+timeStr.split(':')[0]+'&bmin='+timeStr.split(':')[1]:'&bhour=12&bmin=0')+'&bsec=0&bcty=VN&bpref=VN&ttime=t';
+
+  D={name,dob,y,m,d,timeStr,gender,city,job,live,goal,marital,cc,animal,napam,napamFull,zodName,zod,lp,dst,soul,py,age,astroUrl};
+
+  var init=name.split(' ').map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+  document.getElementById('av').textContent=init;
+  document.getElementById('rn').textContent=name+(age?' — '+age+' tuổi':'');
+  document.getElementById('rs').textContent=(city?city+' · ':'')+cc+' · Tuổi '+animal+' · Mạng '+napam+' ('+napamFull+')';
+  var tg=document.getElementById('rtags');
+  tg.innerHTML=tag(zod.sym+' '+zodName,'tg')+tag('Tuổi '+animal,'ti')+tag('Mạng '+napam,'ts')+tag('Đường đời '+lp,'tb')+(job?tag(job,'ti'):'');
+
+  buildTV();buildTS();buildCT();buildGY();
+  document.getElementById('ph').style.display='none';
+  document.getElementById('result').style.display='block';
+  st('tv');
+}
+
+function buildTV(){
+  var v=D,ed=EL[v.napam]||EL.Thổ;
+  var phases=[
+    {r:'0–20 tuổi',l:'Học hỏi & định hình',desc:'Giai đoạn xây nền tảng. Trải nghiệm định hình tính cách suốt đời.',on:v.age<=20},
+    {r:'21–35 tuổi',l:'Xây dựng & thử thách',desc:'Vận trình bùng nổ. Cơ hội nhiều, thử thách lớn. Quyết định giai đoạn này ảnh hưởng cả cuộc đời.',on:v.age>20&&v.age<=35},
+    {r:'36–50 tuổi',l:'Đỉnh cao & thu hoạch',desc:'Thành quả từ những gì đã gieo. Ổn định, tích lũy, quyền lực xã hội tăng cao.',on:v.age>35&&v.age<=50},
+    {r:'51+ tuổi',l:'Trí tuệ & lan tỏa',desc:'Kinh nghiệm là tài sản lớn nhất. Trở thành người truyền cảm hứng.',on:v.age>50}
+  ];
+  document.getElementById('p-tv').innerHTML=
+  '<div class="sh">Tứ trụ — Mệnh cục</div>'+
+  '<div class="mg">'+
+  '<div class="mc"><div class="ml">Can Chi</div><div class="mv" style="font-size:1.35rem">'+v.cc+'</div><div class="ms">Âm lịch năm sinh</div></div>'+
+  '<div class="mc"><div class="ml">Con giáp</div><div class="mv" style="font-size:1.35rem">'+v.animal+'</div></div>'+
+  '<div class="mc"><div class="ml">Nạp Âm mạng</div><div class="mv" style="font-size:1.35rem">'+v.napam+'</div><div class="ms" style="font-size:9px">'+v.napamFull+'</div></div>'+
+  '</div>'+
+  box('Nạp Âm — '+v.napamFull,'Năm '+v.cc+' mang mạng <strong>'+v.napam+'</strong> theo hệ Nạp Âm ngũ hành (đây là hành mệnh chuẩn dùng trong tử vi, khác với hành của Can Chi đơn thuần). '+ed.desc)+
+  '<div class="div"></div><div class="sh">Vận trình theo giai đoạn</div>'+
+  phases.map(function(ph,i){return '<div class="phase"><div class="pdw"><div class="pd'+(ph.on?' on':'')+'"></div>'+(i<3?'<div class="pl"></div>':'')+'</div><div class="pb"><div class="pr">'+ph.r+(ph.on?' · <strong style="color:#c9a84c">Hiện tại</strong>':'')+'</div><div class="plb">'+ph.l+'</div><div class="pdc">'+ph.desc+'</div></div></div>';}).join('')+
+  '<div class="div"></div><div class="sh">Tài lộc & tình duyên — Hành '+v.napam+'</div>'+
+  box('Tài lộc & sự nghiệp',ed.tai)+box('Tình duyên',ed.duyen);
+}
+
+function buildTS(){
+  var v=D,lp=LPD[v.lp]||LPD[1],dst=LPD[v.dst]||LPD[1],sl=LPD[v.soul]||LPD[1],py=LPD[v.py]||LPD[1];
+  document.getElementById('p-ts').innerHTML=
+  '<div class="sh">Các con số cốt lõi</div>'+
+  '<div class="mg">'+
+  '<div class="mc"><div class="ml">Đường đời</div><div class="mv">'+v.lp+'</div><div class="ms">Life Path</div></div>'+
+  '<div class="mc"><div class="ml">Định mệnh</div><div class="mv">'+v.dst+'</div><div class="ms">Expression</div></div>'+
+  '<div class="mc"><div class="ml">Linh hồn</div><div class="mv">'+v.soul+'</div><div class="ms">Soul Urge</div></div>'+
+  '<div class="mc"><div class="ml">Năm cá nhân</div><div class="mv">'+v.py+'</div><div class="ms">'+new Date().getFullYear()+'</div></div>'+
+  '</div>'+
+  '<div class="note-box"><p>⚠️ Số Định mệnh và Linh hồn được tính theo hệ Pythagorean dựa trên tên Latin không dấu. Kết quả có thể khác các web dùng hệ Chaldean hoặc map riêng cho tiếng Việt.</p></div>'+
+  '<div class="div"></div><div class="sh">Số đường đời '+v.lp+' — '+lp.t+'</div>'+
+  mkStars(lp.star)+
+  box('Bản chất & sứ mệnh',lp.core)+box('Điểm mạnh',lp.str)+box('Thách thức cần vượt',lp.chal)+
+  box('Tình yêu & quan hệ',lp.love)+box('Hướng sự nghiệp',lp.car)+box('Con số & màu may mắn',lp.lucky)+
+  '<div class="div"></div><div class="sh">Số định mệnh '+v.dst+' — '+dst.t+'</div>'+
+  box('Cách bạn thể hiện với thế giới',dst.core+' Phản ánh năng lực tiềm ẩn mà người ngoài nhìn thấy ở bạn.')+
+  '<div class="div"></div><div class="sh">Số linh hồn '+v.soul+' — Khao khát sâu thẳm</div>'+
+  box('Điều gì thôi thúc bạn từ bên trong?',sl.core+' Đây là con số ẩn — mong muốn thực sự mà đôi khi chính bạn chưa nhận ra.')+
+  '<div class="div"></div><div class="sh">Năm cá nhân '+v.py+' — Chủ đề '+new Date().getFullYear()+'</div>'+
+  box('Năng lượng năm nay',py.core+' Thế mạnh cần tận dụng: '+py.str);
+}
+
+function buildCT(){
+  var v=D,z=v.zod;
+  // Tạo link Astro.com embed
+  var aLink='https://www.astro.com/cgi/chart.cgi?lang=en&nhor=0&bday='+v.d+'&bmon='+v.m+'&byear='+v.y+(v.timeStr?'&bhour='+v.timeStr.split(':')[0]+'&bmin='+v.timeStr.split(':')[1]:'&bhour=12&bmin=0')+'&bsec=0&bcty=VN&bpref=VN&ttime=t';
+
+  document.getElementById('p-ct').innerHTML=
+  '<div class="sh">'+z.sym+' Cung Mặt Trời — '+v.zodName+'</div>'+
+  '<div class="mg">'+
+  '<div class="mc"><div class="ml">Nguyên tố</div><div class="mv" style="font-size:1.2rem">'+z.el+'</div></div>'+
+  '<div class="mc"><div class="ml">Hành tinh trị vì</div><div class="mv" style="font-size:.9rem;line-height:1.3">'+z.ruler+'</div></div>'+
+  '</div>'+
+  box('Tính cách cốt lõi',z.desc)+
+  box('Tình yêu & quan hệ',z.love)+
+  box('Sự nghiệp & thế mạnh',z.career)+
+  box('Sức khỏe cần lưu ý',z.health)+
+  box('Ngày may · Con số · Màu',z.lucky)+
+  '<div class="sh" style="margin-top:1rem">Cung tương hợp</div>'+
+  '<div class="compat-row">'+z.compat.map(function(c){return '<div class="compat-tag">'+(ZOD[c]?ZOD[c].sym+' ':'')+c+'</div>'}).join('')+'</div>'+
+  '<div class="div"></div>'+
+  // Cung Mặt Trăng & Cung Mọc — link ra Astro.com
+  '<div class="astro-section">'+
+  '<div class="astro-header"><div class="astro-header-t">☽ Cung Mặt Trăng & Cung Mọc</div><span class="astro-badge">Cần ephemeris</span></div>'+
+  '<div class="astro-body">'+
+  '<p>Cung Mặt Trăng và Cung Mọc cần tính toán từ <strong>ephemeris thiên văn chuyên dụng</strong> — không thể tính chính xác bằng công thức đơn giản. Bất kỳ kết quả nào hiển thị mà không dùng Swiss Ephemeris đều chỉ là ước tính có thể sai.</p>'+
+  '<p>Để xem chính xác, nhấn nút bên dưới — Astro.com sẽ tính đúng cho ngày <strong>'+v.d+'/'+v.m+'/'+v.y+(v.timeStr?' lúc '+v.timeStr:'')+'</strong>:</p>'+
+  '<a class="astro-link" href="'+aLink+'" target="_blank">Xem lá số đầy đủ trên Astro.com ↗</a>'+
+  '</div></div>'+
+  '<div class="div"></div><div class="sh">Ảnh hưởng các hành tinh</div>'+
+  box('Sao Kim (Venus) — Tình yêu & thẩm mỹ','Chi phối cách bạn yêu và được yêu, gu thẩm mỹ và sức hút cá nhân.')+
+  box('Sao Thủy (Mercury) — Tư duy & giao tiếp','Ảnh hưởng cách bạn suy nghĩ, học hỏi và diễn đạt ý tưởng.')+
+  box('Sao Hỏa (Mars) — Hành động & năng lượng','Thúc đẩy tham vọng, động lực và cách đối mặt xung đột.')+
+  box('Sao Mộc (Jupiter) — May mắn & mở rộng','Mang đến cơ hội phát triển và những vận may bất ngờ.')+
+  box('Sao Thổ (Saturn) — Kỷ luật & bài học','Tạo ra cấu trúc và những bài học sâu sắc định hình con người bạn.');
+}
+
+function buildGY(){
+  var v=D,lp=LPD[v.lp]||LPD[1],ed=EL[v.napam]||EL.Thổ;
+  var html='<div class="sh">Gợi ý cá nhân hoá</div>';
+  if(v.job){
+    var jl=v.job.toLowerCase(),body='';
+    if(jl.includes('kế toán')||jl.includes('tài chính')||jl.includes('audit')||jl.includes('kiểm toán')){
+      body='Với nghề <strong>'+v.job+'</strong> và số đường đời '+v.lp+', bạn đang đi đúng hướng. Chứng chỉ quốc tế (CPA, ACCA, CFA) sẽ là bước đệm mạnh cho 3–5 năm tới.';
+    } else if(jl.includes('sinh viên')||jl.includes('học sinh')){
+      body='Giai đoạn học tập rất quan trọng. Số đường đời '+v.lp+' gợi ý hướng phù hợp: <strong>'+lp.car+'</strong>. Hãy tìm internship và trải nghiệm thực tế sớm nhất có thể.';
+    } else {
+      body='Với công việc <strong>'+v.job+'</strong>, điểm mạnh cần khai thác: '+lp.str+'. Thách thức cần nhận thức: '+lp.chal+'.';
+    }
+    html+=sugg('Nghề nghiệp & phát triển',body);
+  }
+  if(v.live) html+=sugg('Phong thủy — '+v.live,'Người mạng <strong>'+v.napam+'</strong> ('+v.napamFull+'): '+ed.phongtuy);
+  if(v.goal){
+    var g=v.goal.toLowerCase(),gb='';
+    if(g.includes('tình duyên')||g.includes('tình yêu')){
+      gb=v.zodName+' trong tình yêu: '+v.zod.love+' Mạng '+v.napam+': '+ed.duyen;
+    } else if(g.includes('sự nghiệp')||g.includes('công việc')){
+      gb='Thành công đến từ: <strong>'+lp.str+'</strong>. Thách thức lớn nhất: '+lp.chal+'.';
+    } else if(g.includes('tài chính')||g.includes('đầu tư')){
+      gb='Mạng '+v.napam+' về tài lộc: '+ed.tai;
+    } else {
+      gb='Chìa khóa cho "'+v.goal+'": khai thác điểm mạnh ('+lp.str+') và vượt qua thách thức ('+lp.chal+').';
+    }
+    html+=sugg('Định hướng: '+v.goal,gb);
+  }
+  if(v.marital){
+    var mt={'doc-than':'Giai đoạn độc thân là cơ hội khám phá bản thân. '+v.zodName+': '+v.zod.love,'co-doi':'Chú trọng giao tiếp cởi mở. Đừng để áp lực bên ngoài ảnh hưởng đến kết nối cảm xúc.','ket-hon':'Hôn nhân vững bền khi cả hai cùng phát triển. Cân bằng sự nghiệp và gia đình.','ly-hon':'Giai đoạn tái xuất phát. Mỗi kết thúc là một khởi đầu mới tốt đẹp hơn.'};
+    html+=sugg('Tình duyên & gia đình',mt[v.marital]||'');
+  }
+  if(!v.job&&!v.live&&!v.goal&&!v.marital) html+=box('Thêm thông tin để nhận gợi ý','Điền nghề nghiệp, nơi ở, mục tiêu hoặc tình trạng hôn nhân để nhận phân tích cá nhân hoá.');
+  html+='<div class="warn"><p><strong>Lưu ý:</strong> Tử vi, thần số học và chiêm tinh học là công cụ khám phá bản thân — không phải lời tiên đoán tuyệt đối. Ý chí và hành động của bạn mới là yếu tố quyết định cuối cùng.</p></div>';
+  document.getElementById('p-gy').innerHTML=html;
+}
+</script>
+</body>
+</html>
